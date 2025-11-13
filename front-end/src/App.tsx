@@ -44,9 +44,8 @@ class App extends React.Component<Props, GameState> {
    */
   newGame = async () => {
     const response = await fetch('/newgame');
-    console.log(response)
     const json = await response.json();
-    this.setState({ cells: json['cells'], player: "X", winner: ""});
+    this.setState(json);
   }
 
   /**
@@ -62,10 +61,14 @@ class App extends React.Component<Props, GameState> {
       e.preventDefault();
       const response = await fetch(`/play?x=${x}&y=${y}`)
       const json = await response.json();
-      this.setState({ cells: json['cells'] });
-      this.setState({ player: json['player']})
-      this.setState({ winner: json['winner']})
+      this.setState(json);
     }
+  }
+
+  undo = async () => {
+    const response = await fetch('/undo')
+    const json = await response.json();
+    this.setState(json);
   }
 
   createCell(cell: Cell, index: number): React.ReactNode {
@@ -128,7 +131,7 @@ class App extends React.Component<Props, GameState> {
         <div id="bottombar">
           <button onClick={/* get the function, not call the function */this.newGame}>New Game</button>
           {/* Exercise: implement Undo function */}
-          <button>Undo</button>
+          <button onClick={this.undo}>Undo</button>
         </div>
       </div>
     );

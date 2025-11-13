@@ -2,6 +2,7 @@ package game;
 
 import java.util.Arrays;
 
+//Deliverable
 public class GameState {
 
     private final Cell[] cells;
@@ -37,14 +38,6 @@ public class GameState {
      */
     @Override
     public String toString() {
-//        StringBuilder cellsJson = new StringBuilder("[");
-//        for (int i = 0; i < cells.length; i++) {
-//            cellsJson.append(cells[i].toString());
-//            if (i < cells.length - 1) {
-//                cellsJson.append(",");
-//            }
-//        }
-//        cellsJson.append("]");
         return String.format(
                 "{ \"cells\": %s, \"player\": \"%s\", \"winner\": \"%s\" }",
                 Arrays.toString(this.cells),

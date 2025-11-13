@@ -16,7 +16,7 @@ enum Player {
 public class Game {
     private final Board board;
     private final Player player;
-    private final List<Game> history;
+    private final List<Game> history; // Last Game is previous state
 
     public Game() {
         this(new Board(), Player.PLAYER0);
@@ -41,15 +41,22 @@ public class Game {
     }
 
     public Game play(int x, int y) {
-        if (this.board.getCell(x, y) != null)
+        if (board.getCell(x, y) != null)
             return this;
-        if (this.getWinner() != null){
+        if (getWinner() != null){
             return this;
         }
-        List<Game> newHistory = new ArrayList<>(this.history);
+        List<Game> newHistory = new ArrayList<>(history);
         newHistory.add(this);
-        Player nextPlayer = this.player == Player.PLAYER0 ? Player.PLAYER1 : Player.PLAYER0;
-        return new Game(this.board.updateCell(x, y, this.player), nextPlayer, newHistory );
+        Player nextPlayer = player == Player.PLAYER0 ? Player.PLAYER1 : Player.PLAYER0;
+        return new Game(board.updateCell(x, y, player), nextPlayer, newHistory );
+    }
+
+    public Game undo() {
+        if (history.isEmpty()) {
+            return this;
+        }
+        return history.get(history.size() - 1);
     }
 
     public Player getWinner() {
