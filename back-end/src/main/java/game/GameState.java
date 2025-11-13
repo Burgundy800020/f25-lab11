@@ -5,14 +5,26 @@ import java.util.Arrays;
 public class GameState {
 
     private final Cell[] cells;
+    private final String player;
+    private final String winner;
 
-    private GameState(Cell[] cells) {
+    private GameState(Cell[] cells, String player, String winner) {
         this.cells = cells;
+        this.player = player;
+        this.winner = winner;
     }
 
     public static GameState forGame(Game game) {
         Cell[] cells = getCells(game);
-        return new GameState(cells);
+        Player player = game.getPlayer();
+        String playerStr = player == Player.PLAYER0 ? "X" : "O";
+        Player winner = game.getWinner();
+        String winnerStr = "";
+        if (winner != null) {
+            winnerStr = winner == Player.PLAYER0 ? "X" : "O";
+        }
+
+        return new GameState(cells, playerStr, winnerStr);
     }
 
     public Cell[] getCells() {
@@ -25,9 +37,20 @@ public class GameState {
      */
     @Override
     public String toString() {
-        return """
-                { "cells": %s}
-                """.formatted(Arrays.toString(this.cells));
+//        StringBuilder cellsJson = new StringBuilder("[");
+//        for (int i = 0; i < cells.length; i++) {
+//            cellsJson.append(cells[i].toString());
+//            if (i < cells.length - 1) {
+//                cellsJson.append(",");
+//            }
+//        }
+//        cellsJson.append("]");
+        return String.format(
+                "{ \"cells\": %s, \"player\": \"%s\", \"winner\": \"%s\" }",
+                Arrays.toString(this.cells),
+                this.player,
+                this.winner
+        );
     }
 
     private static Cell[] getCells(Game game) {

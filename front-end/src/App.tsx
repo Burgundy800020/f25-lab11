@@ -34,7 +34,7 @@ class App extends React.Component<Props, GameState> {
     /**
      * state has type GameState as specified in the class inheritance.
      */
-    this.state = { cells: [] }
+    this.state = {cells: [], player: "X", winner: ""}
   }
 
   /**
@@ -44,8 +44,9 @@ class App extends React.Component<Props, GameState> {
    */
   newGame = async () => {
     const response = await fetch('/newgame');
+    console.log(response)
     const json = await response.json();
-    this.setState({ cells: json['cells'] });
+    this.setState({ cells: json['cells'], player: "X", winner: ""});
   }
 
   /**
@@ -62,6 +63,8 @@ class App extends React.Component<Props, GameState> {
       const response = await fetch(`/play?x=${x}&y=${y}`)
       const json = await response.json();
       this.setState({ cells: json['cells'] });
+      this.setState({ player: json['player']})
+      this.setState({ winner: json['winner']})
     }
   }
 
@@ -113,8 +116,12 @@ class App extends React.Component<Props, GameState> {
      * can treat HTML elements as code.
      * @see https://reactjs.org/docs/introducing-jsx.html
      */
+    // console.log(this.state)
     return (
       <div>
+        <div id="instructions">
+          {this.state.winner !== ""? `${this.state.winner} wins!` : `${this.state.player}'s turn`}
+        </div>
         <div id="board">
           {this.state.cells.map((cell, i) => this.createCell(cell, i))}
         </div>
